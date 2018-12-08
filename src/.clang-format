@@ -1,0 +1,12 @@
+BasedOnStyle: LLVM
+BreakBeforeBraces: Stroustrup
+Language: Cpp
+IndentWidth: 4
+TabWidth: 4
+UseTab: ForIndentation
+AlignEscapedNewlinesLeft: true
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: false
+AlignTrailingComments: true
+IndentCaseLabels: true
+MaxEmptyLinesToKeep: 2
