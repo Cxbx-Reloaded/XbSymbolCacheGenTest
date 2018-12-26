@@ -269,8 +269,10 @@ void CDECL EmuRegisterSymbol(const char *library_str, uint32_t library_flag,
 {
 	// Ignore registered symbol in current database.
 	uint32_t hasSymbol = g_SymbolAddresses[symbol_str];
-	if (hasSymbol != 0)
+
+	if (hasSymbol != 0) {
 		return;
+	}
 
 #ifdef _DEBUG
 	// Output some details
@@ -396,6 +398,10 @@ void ScanXbe(const xbe_header *pXbeHeader, bool is_raw)
 		symbolCacheData.SetLongValue(section_libs, LibraryName.c_str(),
 		                             pLibraryVersion[i].wBuildVersion, nullptr,
 		                             /*UseHex =*/false);
+
+		if (buildVersion < pLibraryVersion[i].wBuildVersion) {
+			buildVersion = pLibraryVersion[i].wBuildVersion;
+		}
 	}
 
 	symbolCacheData.SetLongValue(section_libs, sect_libs_keys.BuildVersion,
