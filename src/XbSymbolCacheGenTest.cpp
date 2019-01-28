@@ -2,23 +2,6 @@
 // application.
 //
 
-// workaround fix for wchar_t on non-Windows OS platforms.
-#if !defined(_WCHAR_T_DEFINED) || !defined(_MSC_VER)
-#if defined(__cplusplus)
-#undef __WCHAR_TYPE__
-#define __WCHAR_TYPE__ char16_t
-typedef char16_t wchar_t;
-#else
-#undef __WCHAR_TYPE__
-#define __WCHAR_TYPE__ unsigned short
-typedef unsigned short wchar_t;
-#endif
-
-#ifndef _WCHAR_T_DEFINED
-#define _WCHAR_T_DEFINED
-#endif
-#endif
-
 #include <clocale>
 #include <cstdint>
 #include <cstdlib>
