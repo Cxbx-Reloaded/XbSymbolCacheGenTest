@@ -8,14 +8,20 @@ project (XbSymbolCacheGenTest)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 
+# Suppress extra stuff from generated solution
+set(CMAKE_SUPPRESS_REGENERATION true)
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+  add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
+endif()
+
 include_directories("${PROJECT_SOURCE_DIR}/import/XbSymbolDatabase"
                     "${PROJECT_SOURCE_DIR}/import/simpleini"
                     "${PROJECT_SOURCE_DIR}/import/xxHash")
 
 add_subdirectory ("${PROJECT_SOURCE_DIR}/import/XbSymbolDatabase")
 
-# Suppress extra stuff from generated solution
-set(CMAKE_SUPPRESS_REGENERATION true)
+
 
 # Add source to this project's executable.
 file(GLOB SOURCES "src/*.cpp")
