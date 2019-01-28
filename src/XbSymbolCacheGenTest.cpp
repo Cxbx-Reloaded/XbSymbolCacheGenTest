@@ -2,27 +2,10 @@
 // application.
 //
 
-// workaround fix for wchar_t on non-Windows OS platforms.
-#if !defined(_WCHAR_T_DEFINED) || !defined(_MSC_VER)
-#if defined(__cplusplus)
-#undef __WCHAR_TYPE__
-#define __WCHAR_TYPE__ char16_t
-typedef char16_t wchar_t;
-#else
-#undef __WCHAR_TYPE__
-#define __WCHAR_TYPE__ unsigned short
-typedef unsigned short wchar_t;
-#endif
-
-#ifndef _WCHAR_T_DEFINED
-#define _WCHAR_T_DEFINED
-#endif
-#endif
-
 #include <clocale>
 #include <cstdint>
 #include <cstdlib>
-#include <experimental/filesystem>
+#include <filesystem>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -35,7 +18,7 @@ typedef unsigned short wchar_t;
 #include "XbSymbolDatabase.h"
 #include "Xbe.h"
 #include "helper.hpp"
-#include "xxhash32.h"
+#include "xxhash.h"
 
 #define _128_MiB 0x08000000
 
@@ -85,7 +68,7 @@ int main(int argc, char **argv)
 	// executable.
 	std::string execPath = argv[0];
 	execPath = execPath.substr(0, execPath.find_last_of("\\/"));
-	std::experimental::filesystem::current_path(execPath);
+	std::filesystem::current_path(execPath);
 
 	std::setlocale(LC_ALL, "English");
 
@@ -229,16 +212,13 @@ int main(int argc, char **argv)
 #if 0
 	pause_for_user_input();
 #else
-	std::cout << "INFO: Scanning xbe file is completed,"
-	             " exiting in 5 seconds...\n";
-
-	Sleep(5000);
+	std::cout << "INFO: Scanning xbe file is completed\n";
 #endif
 
 	return 0;
 }
 
-void CDECL EmuOutputMessage(xb_output_message mFlag, const char *message)
+void EmuOutputMessage(xb_output_message mFlag, const char *message)
 {
 	switch (mFlag) {
 		case XB_OUTPUT_MESSAGE_INFO: {
@@ -263,9 +243,9 @@ void CDECL EmuOutputMessage(xb_output_message mFlag, const char *message)
 	}
 }
 
-void CDECL EmuRegisterSymbol(const char *library_str, uint32_t library_flag,
-                             const char *symbol_str, uint32_t func_addr,
-                             uint32_t revision)
+void EmuRegisterSymbol(const char *library_str, uint32_t library_flag,
+                       const char *symbol_str, uint32_t func_addr,
+                       uint32_t revision)
 {
 	// Ignore registered symbol in current database.
 	uint32_t hasSymbol = g_SymbolAddresses[symbol_str];
@@ -323,14 +303,14 @@ void ScanXbe(const xbe_header *pXbeHeader, bool is_raw)
 
 	// Make sure the Symbol Cache directory exists
 	std::string cachePath = "SymbolCache/";
-	if (!std::experimental::filesystem::exists(cachePath) &&
-	    !std::experimental::filesystem::create_directory(cachePath)) {
+	if (!std::filesystem::exists(cachePath) &&
+	    !std::filesystem::create_directory(cachePath)) {
 		EmuOutputMessage(XB_OUTPUT_MESSAGE_ERROR,
 		                 "Couldn't create SymbolCache folder!");
 	}
 
 	// Hash the loaded XBE's header, use it as a filename
-	uint32_t uiHash = XXHash32::hash((void *)pXbeHeader, sizeof(xbe_header), 0);
+	uint32_t uiHash = XXH32((void *)pXbeHeader, sizeof(xbe_header), 0);
 	std::stringstream sstream;
 	char tAsciiTitle[40] = "Unknown";
 	std::mbstate_t state = std::mbstate_t();
