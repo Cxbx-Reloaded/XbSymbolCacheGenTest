@@ -218,7 +218,7 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-void CDECL EmuOutputMessage(xb_output_message mFlag, const char *message)
+void EmuOutputMessage(xb_output_message mFlag, const char *message)
 {
 	switch (mFlag) {
 		case XB_OUTPUT_MESSAGE_INFO: {
@@ -243,9 +243,9 @@ void CDECL EmuOutputMessage(xb_output_message mFlag, const char *message)
 	}
 }
 
-void CDECL EmuRegisterSymbol(const char *library_str, uint32_t library_flag,
-                             const char *symbol_str, uint32_t func_addr,
-                             uint32_t revision)
+void EmuRegisterSymbol(const char *library_str, uint32_t library_flag,
+                       const char *symbol_str, uint32_t func_addr,
+                       uint32_t revision)
 {
 	// Ignore registered symbol in current database.
 	uint32_t hasSymbol = g_SymbolAddresses[symbol_str];
