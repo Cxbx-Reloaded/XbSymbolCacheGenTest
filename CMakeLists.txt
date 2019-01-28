@@ -5,7 +5,8 @@ cmake_minimum_required (VERSION 3.8)
 
 project (XbSymbolCacheGenTest)
 
-add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 17)
 
 include_directories("${PROJECT_SOURCE_DIR}/import/XbSymbolDatabase" "${PROJECT_SOURCE_DIR}/import/SimpleIni")
 
@@ -17,4 +18,12 @@ set(CMAKE_SUPPRESS_REGENERATION true)
 # Add source to this project's executable.
 file(GLOB SOURCES "src/*.cpp")
 add_executable(XbSymbolCacheGenTest ${SOURCES})
-target_link_libraries (XbSymbolCacheGenTest LINK_PUBLIC XbSymbolDatabase)
+
+# GCC needs a lib for std::filesystem
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  set(STD_FILESYSTEM_LIBRARY -lstdc++fs)
+else()
+  set(STD_FILESYSTEM_LIBRARY)
+endif()
+
+target_link_libraries(XbSymbolCacheGenTest LINK_PUBLIC XbSymbolDatabase ${STD_FILESYSTEM_LIBRARY})

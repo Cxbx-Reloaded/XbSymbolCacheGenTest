@@ -5,7 +5,7 @@
 #include <clocale>
 #include <cstdint>
 #include <cstdlib>
-#include <experimental/filesystem>
+#include <filesystem>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -68,7 +68,7 @@ int main(int argc, char **argv)
 	// executable.
 	std::string execPath = argv[0];
 	execPath = execPath.substr(0, execPath.find_last_of("\\/"));
-	std::experimental::filesystem::current_path(execPath);
+	std::filesystem::current_path(execPath);
 
 	std::setlocale(LC_ALL, "English");
 
@@ -303,8 +303,8 @@ void ScanXbe(const xbe_header *pXbeHeader, bool is_raw)
 
 	// Make sure the Symbol Cache directory exists
 	std::string cachePath = "SymbolCache/";
-	if (!std::experimental::filesystem::exists(cachePath) &&
-	    !std::experimental::filesystem::create_directory(cachePath)) {
+	if (!std::filesystem::exists(cachePath) &&
+	    !std::filesystem::create_directory(cachePath)) {
 		EmuOutputMessage(XB_OUTPUT_MESSAGE_ERROR,
 		                 "Couldn't create SymbolCache folder!");
 	}
