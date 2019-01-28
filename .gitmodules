@@ -4,3 +4,6 @@
 [submodule "import/simpleini"]
 	path = import/simpleini
 	url = https://github.com/brofield/simpleini
+[submodule "import/xxHash"]
+	path = import/xxHash
+	url = https://github.com/Cyan4973/xxHash.git

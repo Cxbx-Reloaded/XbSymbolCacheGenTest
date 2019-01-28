@@ -9,7 +9,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 
 include_directories("${PROJECT_SOURCE_DIR}/import/XbSymbolDatabase"
-                    "${PROJECT_SOURCE_DIR}/import/simpleini")
+                    "${PROJECT_SOURCE_DIR}/import/simpleini"
+                    "${PROJECT_SOURCE_DIR}/import/xxHash")
 
 add_subdirectory ("${PROJECT_SOURCE_DIR}/import/XbSymbolDatabase")
 
@@ -18,6 +19,11 @@ set(CMAKE_SUPPRESS_REGENERATION true)
 
 # Add source to this project's executable.
 file(GLOB SOURCES "src/*.cpp")
+
+set(SOURCES ${SOURCES}
+  "import/xxHash/xxhash.c"
+)
+
 add_executable(XbSymbolCacheGenTest ${SOURCES})
 
 # GCC needs a lib for std::filesystem

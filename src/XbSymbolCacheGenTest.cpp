@@ -18,7 +18,7 @@
 #include "XbSymbolDatabase.h"
 #include "Xbe.h"
 #include "helper.hpp"
-#include "xxhash32.h"
+#include "xxhash.h"
 
 #define _128_MiB 0x08000000
 
@@ -310,7 +310,7 @@ void ScanXbe(const xbe_header *pXbeHeader, bool is_raw)
 	}
 
 	// Hash the loaded XBE's header, use it as a filename
-	uint32_t uiHash = XXHash32::hash((void *)pXbeHeader, sizeof(xbe_header), 0);
+	uint32_t uiHash = XXH32((void *)pXbeHeader, sizeof(xbe_header), 0);
 	std::stringstream sstream;
 	char tAsciiTitle[40] = "Unknown";
 	std::mbstate_t state = std::mbstate_t();
