@@ -212,10 +212,7 @@ int main(int argc, char **argv)
 #if 0
 	pause_for_user_input();
 #else
-	std::cout << "INFO: Scanning xbe file is completed,"
-	             " exiting in 5 seconds...\n";
-
-	Sleep(5000);
+	std::cout << "INFO: Scanning xbe file is completed\n";
 #endif
 
 	return 0;
