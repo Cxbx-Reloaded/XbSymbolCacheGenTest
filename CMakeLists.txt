@@ -8,7 +8,8 @@ project (XbSymbolCacheGenTest)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 
-include_directories("${PROJECT_SOURCE_DIR}/import/XbSymbolDatabase" "${PROJECT_SOURCE_DIR}/import/SimpleIni")
+include_directories("${PROJECT_SOURCE_DIR}/import/XbSymbolDatabase"
+                    "${PROJECT_SOURCE_DIR}/import/simpleini")
 
 add_subdirectory ("${PROJECT_SOURCE_DIR}/import/XbSymbolDatabase")
 
