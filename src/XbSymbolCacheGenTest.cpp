@@ -49,35 +49,82 @@ void pause_for_user_input()
 	(void)std::getchar();
 }
 
+int invalid_arugment(int argc, char **argv)
+{
+	std::cout << "ERROR: Input correct argument as described below.\n\n"
+	             "> XbSymbolCacheGenTest default.xbe\n"
+	             "> XbSymbolCacheGenTest default.xbe --out [output to "
+	             "specific folder]\n"
+	             "> XbSymbolCacheGenTest --out [output to specific folder]"
+	             " default.xbe\n";
+
+#if _DEBUG
+	// Verbose ARG output test
+	while (argc > 0) {
+		argc--;
+		std::cout << "ARG" << argc << ": " << argv[argc] << "\n";
+	}
+#endif
+
+	pause_for_user_input();
+	return 1;
+}
+
 extern void ScanXbe(const xbe_header *pXbeHeader, bool is_raw);
 
 int main(int argc, char **argv)
 {
-	// NOTE: We are ignoring the first argument which is the executable file.
-	if (argc != 2) {
-		std::cout << "ERROR: Must have one argument! - " << argc << "\n";
-		while (argc > 0) {
-			argc--;
-			std::cout << "ARG" << argc << ": " << argv[argc] << "\n";
-		}
-		pause_for_user_input();
-		return 1;
+	std::string path_xbe;
+	std::string path_output;
+	static const std::string arg_out = "--out";
+	if (argc > 4) {
+		return invalid_arugment(argc, argv);
 	}
 
-	// Fix up to use executable's folder since it is meant for portable
-	// executable.
-	std::string execPath = argv[0];
-	execPath = execPath.substr(0, execPath.find_last_of("\\/"));
-	std::filesystem::current_path(execPath);
+	// Verify if --out parameter exists
+	if (argc > 2) {
+		// > ... --out [output to specific folder] default.xbe
+		if (std::strcmp(argv[1], arg_out.c_str()) == 0) {
+			if (argc != 4) {
+				return invalid_arugment(argc, argv);
+			}
+			path_output = argv[2];
+			path_xbe = argv[3];
+		}
+		// > ... default.xbe --out [output to specific folder]
+		else if (std::strcmp(argv[2], arg_out.c_str()) == 0) {
+			if (argc != 4) {
+				return invalid_arugment(argc, argv);
+			}
+			path_xbe = argv[1];
+			path_output = argv[3];
+		}
+		else {
+			return invalid_arugment(argc, argv);
+		}
+	}
+	// Since extra parameter doesn't exist, then cwd is left alone.
+	else {
+		path_xbe = argv[1];
+	}
 
 	std::setlocale(LC_ALL, "English");
 
-	std::ifstream xbeFile =
-	    std::ifstream(std::string(argv[1]), std::ios::binary);
+	std::ifstream xbeFile = std::ifstream(path_xbe, std::ios::binary);
 	if (!xbeFile.is_open()) {
 		std::cout << "ERROR: Unable to open the file!\n";
 		pause_for_user_input();
 		return 2;
+	}
+
+	// Check if output is set, verify path, then set output path.
+	if (!path_output.empty()) {
+		if (!std::filesystem::exists(path_output)) {
+			std::cout << "ERROR: Output path does not exist!\n";
+			pause_for_user_input();
+			return 2;
+		}
+		std::filesystem::current_path(path_output);
 	}
 
 	std::string fileData = std::string(std::istreambuf_iterator<char>(xbeFile),
